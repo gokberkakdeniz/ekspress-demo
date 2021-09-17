@@ -1,6 +1,22 @@
 import Ekspress from "./server";
+import express from "express";
 
-const app = new Ekspress();
+const app = (function() {
+  if (process.env.EXPRESS === "true") {
+    console.log("[#] using express...");
+    
+    const app = express()
+
+    app.disable('etag')
+    app.disable('x-powered-by')
+
+    return app;
+  }
+  
+  console.log("[#] using ekspress...");
+  
+  return new Ekspress();
+})()
 
 app.use((req, res, next) => {
   const { url = "", method = "" } = req;
